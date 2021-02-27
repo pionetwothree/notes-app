@@ -1,0 +1,16 @@
+"frontend" Ordner:
+andere packages als in "notes-app" - siehe beide package.json files
+
+
+Um den server.js zu starten, folgenden Befehl ausführen:
+npx nodemon server.js
+
+Für das Frontend:
+npm start
+
+
+Damit es im ganzen netzwerk funktioniert: (nicht nur am localhost)
+Unter CreatNote.jsx die IP Adresse auf 10.0.0.62 ändern.
+Unter package.json die IP Adresse auf 10.0.0.62 ändern.
+
+

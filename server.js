@@ -13,6 +13,10 @@ mongoose.connect('mongodb+srv://Dom:RjIbzYxjHaL8ypxa@cluster0.fpxgk.mongodb.net/
 //require route
 app.use("/", require("./routes/noteRoute"));
 
+app.get("/create", (req, res) => {
+    res.send({Project: "Test"});
+});
+
 app.listen(3001, function(){
     console.log("express server is running on port 3001");
 })

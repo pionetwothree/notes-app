@@ -1,0 +1,38 @@
+import React from 'react';
+
+  
+export default function News() 
+{
+      const API_KEY = 'HGJWFG4N8AQ66ICD';
+      let StockSymbol = 'IBM';
+      let API_Call = `https://www.alphavantage.co/query?function=OVERVIEW&symbol=${StockSymbol}&outputsize=compact&apikey=${API_KEY}`;
+      const stockDescription = [];
+      const stockEPS = [];
+      const [mode, setMode]=useState('online');
+  
+      fetch(API_Call)
+        .then(
+          function(response) {
+            return response.json();
+          }
+        )
+        .then(
+          function(data) {
+            console.log(data);
+            }).catch(err=>{
+              setMode('offline');
+
+return <div>
+          <h1>Stock Market</h1>          
+            <div>
+                {
+                    mode==='offline'?
+                    <div class="alert alert-warning" role="alert">
+                        You are in offline mode or some issue with connection
+                    </div>
+                    :null
+                }
+            </div>
+
+          </div>
+},)}

@@ -6,6 +6,8 @@ function Navbar() {
         <h4><Link className="Link" to="/">Home</Link></h4>
         <h4><Link className="Link" to="/notes">Notes</Link></h4>
         <h4><Link className="Link" to="/create">Create Notes</Link></h4>
+        <h4><Link className="Link" to="/news">News</Link></h4>
+        <h4><Link className="Link" to="/stocknews">StockNews</Link></h4>
     </nav>
 
 }

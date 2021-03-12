@@ -24,9 +24,16 @@ function CreateNote() {
         const newNote = {
             title: input.title,
             content: input.content
-        }
+        };
+        alert("Added");
 
-        axios.post('http://localhost:3001/create', newNote)
+        axios.post('http://localhost:3001/create', newNote).then((res) => {
+            //if (res.success) {
+              //alert("Added");
+              //this.newNote({ title: "", content: ""});
+            //}
+          });
+
 
     }
 
@@ -42,6 +49,7 @@ return <div className='container'>
             </div>
 
             <button onClick={handleClick} className="btn btn-lg btn-info">ADD NOTE</button>
+
         </form>
     </div>
 }

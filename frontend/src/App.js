@@ -4,6 +4,9 @@ import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Notes from './components/Notes';
 import CreateNote from './components/CreateNote';
+import News from './components/News';
+import Footer from './components/Footer';
+import StockNews from './components/StockNews';
 
 function App() {
 //Navbar
@@ -19,14 +22,20 @@ return (
     <Notes />
     </Route>
 
+    <Route path="/news">
+    <News />
+    </Route>
+
     <Route path="/create">
     <CreateNote />
     </Route>
 
+    <Route path="/stocknews">
+    <StockNews />
+    </Route>
+
+  <Footer />
   </Router>
 )}
 
 export default App;
-
-
-//Testt

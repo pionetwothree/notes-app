@@ -13,7 +13,9 @@ router.route("/create").post((req, res) => {
     });
 
     newNote.save();
-})
+
+});
+
 
 router.route("/notes").get((req, res) => {
     Note.find()

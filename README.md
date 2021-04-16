@@ -16,4 +16,7 @@ PS C:\Users\Name\pwa\notes-app> npx nodemon server.js
 Use the GraphQL_API respository for the graphql and apollo server
 The notes-app acts as Client for different data sources like the graphql_API
 
+Command Line:
+PS C:\Users\Name\pwa\Graphql_API> npm start
+
 

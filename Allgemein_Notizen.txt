@@ -14,3 +14,34 @@ Unter CreatNote.jsx die IP Adresse auf 10.0.0.62 ändern.
 Unter package.json die IP Adresse auf 10.0.0.62 ändern.
 
 
+
+    /** 
+    const app = new Realm.App({ id: "realmtest-jhfal" });
+    const credentials = Realm.Credentials.anonymous();
+    try {
+        const user = await app.logIn(credentials);
+        } 
+        catch(err) {
+        console.error("Failed to log in", err);
+        }
+
+        exports.getTasks = async (partition) => {
+            const realm = await index.getRealm(partition);
+            const tasks = realm.objects("Task");
+            output.header("MY TASKS:");
+            output.result(JSON.stringify(tasks, null, 2));
+          };
+    
+    
+    const notestestSchema = {
+        name: 'notestest',
+        properties: {
+            _id: 'objectId?',
+            content: 'string?',
+            title: 'string?',
+        },
+        primaryKey: '_id',
+        };
+
+    */
+

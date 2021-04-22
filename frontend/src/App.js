@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Home from './components/Home';
 import Notes from './components/Notes';
 import CreateNote from './components/CreateNote';
-import News from './components/News';
+import ApolloNotes from './components/ApolloNotes';
 import Footer from './components/Footer';
 import StockNews from './components/StockNews';
 
@@ -37,8 +37,8 @@ return (
     <Notes />
     </Route>
 
-    <Route path="/news">
-      <News />
+    <Route path="/apollonotes">
+      <ApolloNotes />
       
     </Route>
 

@@ -28,17 +28,33 @@ function CreateNote() {
         alert("Added");
 
         axios.post('http://localhost:3001/create', newNote).then((res) => {
+            console.log(res.status);
             //if (res.success) {
-              //alert("Added");
-              //this.newNote({ title: "", content: ""});
+            //alert("Added");
+            //this.newNote({ title: "", content: ""});
             //}
           });
 
-
     }
+
+    function Online () {
+        if (navigator.onLine) {
+          console.log('online');
+          return <p style={{backgroundColor:'green', color: "white"}}>Online</p>;
+        } else {
+          console.log('offline');
+          return <p style={{backgroundColor:'red', color: "white"}}>Offline</p>;
+        }
+        }
 
 return <div className='container'>
         <h1>Create Note</h1>
+        <br></br>
+        <div className='text'>
+        <Online> </Online>
+        </div>
+        <br></br>
+        
         <form>
             <div className='form-group'>
                 <input onChange={handleChange} name="title" value={input.title} autoComplete="off" className='from-control' placeholder="note title"></input>

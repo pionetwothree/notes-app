@@ -1,42 +1,139 @@
 //import React, { useState, useEffect } from 'react'
 //import {Table} from 'react-bootstrap'
 //import Realm from "realm"
-import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery } from '@apollo/client';
+//import { NetworkStatus } from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery, useMutation } from '@apollo/client';
+//import {createNetworkStatusNotifier} from 'react-apollo-network-status';
 
 
 export default function News() {
 
+  function Online () {
+  if (navigator.onLine) {
+    console.log('online');
+    return <p>Online</p>;
+  } else {
+    console.log('offline');
+    return <p>Offline</p>;
+  }
+  }
+
+  //window.addEventListener('offline', function(e) { console.log('offline');});
+
+  //window.addEventListener('online', function(e) { console.log('online'); });
+
+
+
   const client = new ApolloClient({
     uri: 'http://localhost:4000/graphql',
-    cache: new InMemoryCache()
+    cache: new InMemoryCache(),
+    connectToDevTools: true
   });
 
-  function ExchangeRates() {
-    const { loading, error, data } = useQuery(gql`query {notes{id,name}} `);
+  const ADD_NOTE = gql`
+  mutation addNote($name: String!, $content: String!) {addNote(name: $name, content: $content) {
+    id
+    name
+    content}}`;
+
+
+  function NotesQuery() {
+    const { loading, error, data } = useQuery(gql`query {allnotes{name,content}} `);
   
     if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :(</p>;
+    if (error) return <p>Error :(</p>; 
   
-    return data.notes.map(({ id, name }) => (
-      <div key={id}>
+    return data.allnotes.map(({ name, content }) => (
+      <div key={name}>
         <p>
-          {id}: {name}
+          {name}: {content}
         </p>
       </div>
     ));
     }
 
+    function AddNote() {
+      let input1;
+      let input2;
+      const [addNote] = useMutation(ADD_NOTE, {
+        update(cache, { data: { addNote } }) {
+          cache.modify({
+            fields: {
+              todos(existingNotes = []) {
+                const newNoteRef = cache.writeFragment({
+                  data: addNote,
+                  fragment: gql`
+                    fragment NewNote on Note {
+                      id
+                      name
+                      content
+                    }
+                  `
+                })
+                  return [...existingNotes, newNoteRef];
+              }
+            }
+           });
+        }
+      }); 
+
+      return (
+        <div>
+          <form
+           onSubmit={e => {
+            e.preventDefault();
+            addNote({ variables: { name: input1.value, content: input2.value } });
+            input1.value = ''; input2.value = '';
+          }}>
+            <input
+              ref={node => {input1 = node}}/>
+            <input
+              ref={node => {input2 = node}}/>
+            <button type="submit" value="OK">Add Note</button>
+          </form>
+
+        </div>
+      );
+    }
+
+/**
+ * <form
+            onSubmit={e => {
+              e.preventDefault();
+              addNote({ variables: { name: input.title } });
+              input.title = '';}}>
+            <input
+              ref={node => {input.title = node}}/>
+            
+            <button type="submit">Add Note</button>
+          </form>
+ * 
+ * 
+ * 
+ * <div className='form-group'>
+                <input onChange={handleChange} name="title" value={input.title} autoComplete="off" className='from-control' placeholder="note title"></input>
+            </div>
+
+            <div className='form-group'>
+                <textarea onChange={handleChange} name="content" value={input.content} autoComplete="off" className='from-control' placeholder="note content"></textarea>
+            </div>
+ * 
+ * 
+ */
+
 
 return (
-      <div className='container'>
+    <div className='container'>
       <ApolloProvider client={client}>
           <div class='center'>
             <h1 class='center'>My first Apollo app 🚀</h1>
-            <ExchangeRates />
+            <Online></Online>
+            <NotesQuery />
+            <AddNote />
           </div>
       </ApolloProvider>
       
-      </div>
+    </div>
     );
   }
 
@@ -71,12 +168,16 @@ return (
 
     */
 
-/** mode==='offline'? 
-                    <div class="alert alert-warning" role="alert">
-                        You are in offline mode or some issue with connection
-                    </div>
-                    :null
+/** {
+      mode ==='offline'?
+      <div class="alert alert-warning" role="alert">You are in offline mode or some issue with connection</div>
+      :null
+    }
+*/
+    
+    
 
-                    <button onClick={registerBackgroundSync} className="btn btn-lg btn-info">Background Sync</button>
+ /**   
+    <button onClick={registerBackgroundSync} className="btn btn-lg btn-info">Background Sync</button>
 
   */

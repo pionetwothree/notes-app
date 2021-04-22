@@ -1,0 +1,9 @@
+.photo {
+    display: block;
+    max-width: 70%;
+    height: auto;
+    
+}
+.text {
+    text-align: center;
+}

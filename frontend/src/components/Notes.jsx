@@ -2,12 +2,13 @@ import React, {useEffect, useState} from 'react';
 //import Loader from './Loader';
 
 function Notes() {
-    const [mode,setMode]=useState('online');
+    
     const [notes, setNotes] = useState([{
         //_id: '',
         title: '',
         content: '',
     }])
+    const [mode,setMode]=useState('online');
 
     useEffect(() => {
         let url = '/notes'
@@ -22,35 +23,41 @@ function Notes() {
             let collection=localStorage.getItem("notes");
             setNotes(JSON.parse(collection))
         })
-    }, [])  
-    
-    const refreshPage = ()=>{
-        window.location.reload();
-     }
+    }, [])   
 
     return <div className='container'>
 
-
+            <h1 class='center'>Notes Page</h1>
+            
             <div>
                 {
                     mode ==='offline'?
-                    <div>You are in offline mode</div> 
+                    <div class="alert alert-warning" role="alert">You are in offline mode or some issue with connection</div>
                     :null
                 }
             </div>
-            
-            <h1 class='center'>Notes Page</h1>
-            <button onClick={refreshPage} className="btn btn-lg btn-info">REFRESH</button>
 
+            <div>    
             {notes.map(note => 
                 <div>
                     <h1>{note.title}</h1>
                     <p>{note.content}</p>
                 </div>
             )}
-            
+            </div>
+
         </div>
     }
 
 
 export default Notes;
+
+/**
+const refreshPage = ()=>{
+    window.location.reload();
+ }
+
+ <button onClick={refreshPage} className="btn btn-lg btn-info">REFRESH</button>
+ */
+
+

@@ -8,6 +8,18 @@ import News from './components/News';
 import Footer from './components/Footer';
 import StockNews from './components/StockNews';
 
+//import useOnlineStatus from '@rehooks/online-status';
+
+/** 
+function MyComponent() {
+  const onlineStatus = useOnlineStatus();
+  return (
+    <div>
+      <h1>You are {onlineStatus ? "Online" : "Offline"}</h1>
+    </div>
+  );
+}
+*/
 
 
 function App() {
@@ -38,7 +50,12 @@ return (
     <StockNews />
     </Route>
 
-  <Footer />
+    
+
+  <Footer> 
+    
+  </Footer>
+
   </Router>
 )}
 

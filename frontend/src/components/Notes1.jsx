@@ -10,7 +10,7 @@ export default class Notes1 extends React.Component {
         //_id: '',
         title: '',
         content: '',}]),
-        currentDateTime: '',
+      currentDateTime: ''
     };
   
     async componentDidMount() {
@@ -18,10 +18,21 @@ export default class Notes1 extends React.Component {
       const response = await fetch(url);
       const data = await response.json() //response.json()
         this.setState({ description: data, loading: false });
-        this.setState({currentDateTime: Date().toLocaleString()});
-        console.warn(data); 
+        
+        if (navigator.onLine) {
+          this.setState({currentDateTime: Date().toLocaleString()});
+        } else {
+          console.log('offline');
+          this.setState({currentDateTime: 'Offline - Check Network status'});
+          return <div>currentDateTime</div>
+        }};
+     
+      
+        //console.warn(data); 
         //localStorage.setItem("notes1",JSON.stringify(data))
-    };
+    
+
+   
     
     render() {
       if (this.state.loading) {
@@ -30,14 +41,13 @@ export default class Notes1 extends React.Component {
       if (!this.state.description) {
         return <div>Error</div>;
       }
+    
 
-          
   
       return (
           <div className='container'>
-          <div className='center'> 
-          <br></br>
-          <text className="text-center text-xs text-uppercase text-light p-3 bg-dark">{ this.state.currentDateTime }</text><br></br><br></br>
+          <div className='center'> <br></br>
+          <text className="text-center text-xs text-uppercase text-light p-3 bg-dark">{ this.state.currentDateTime }</text><br></br><br></br> 
           <button onClick={() => this.componentDidMount()} className="btn btn-lg btn-info">Update</button>  
             {this.state.description.map(note => 
                 <div>
@@ -45,9 +55,7 @@ export default class Notes1 extends React.Component {
                     <p>{note.content}</p>
                 </div>
             )}
- 
             </div>
-
       </div>
       );
     }

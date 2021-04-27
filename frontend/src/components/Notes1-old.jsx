@@ -18,8 +18,8 @@ export default class Notes1 extends React.Component {
       const data = await response.json() //response.json()
         this.setState({ description: data, loading: false });
         console.warn(data); 
-        localStorage.setItem("notes1",JSON.stringify(data))
-    }
+        //localStorage.setItem("notes1",JSON.stringify(data))
+    };
     
     render() {
       if (this.state.loading) {
@@ -37,7 +37,7 @@ export default class Notes1 extends React.Component {
           <button onClick={() => this.componentDidMount()} className="btn btn-lg btn-info">Update</button>  
             {this.state.description.map(note => 
                 <div>
-                    <p>{note.title}</p>
+                    <h1>{note.title}</h1>
                     <p>{note.content}</p>
                 </div>
             )}

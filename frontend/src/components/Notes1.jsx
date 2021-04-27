@@ -4,39 +4,24 @@ import React from 'react';
 
 export default class Notes1 extends React.Component {
 
-  constructor(props) {
-    super();
-    this.state = {
-      time: '',
-      loading: true,
-      description: ([{
-        //_id: '',
-        //title: '',
-        content: '',}])
-    };
-   
-/** 
     state = {
       loading: true,
       description: ([{
         //_id: '',
-        //title: '',
-        content: '',}])
-      };
-*/  
-
-    componentDidMount(() => {
-      const url = '/notes';
-      fetch(url).then((response) => {
-      const data = response.json() //response.json()
-      },
-      this.setState({ description: data, loading: false }),
-      this.setState({currentDateTime: Date().toLocaleString()}),
-      console.warn(data) 
-        //localStorage.setItem("notes1",JSON.stringify(data))
-      )}
-    )};
+        title: '',
+        content: '',}]),
+        currentDateTime: '',
+    };
   
+    async componentDidMount() {
+      const url = '/notes';
+      const response = await fetch(url);
+      const data = await response.json() //response.json()
+        this.setState({ description: data, loading: false });
+        this.setState({currentDateTime: Date().toLocaleString()});
+        console.warn(data); 
+        //localStorage.setItem("notes1",JSON.stringify(data))
+    };
     
     render() {
       if (this.state.loading) {
@@ -45,20 +30,21 @@ export default class Notes1 extends React.Component {
       if (!this.state.description) {
         return <div>Error</div>;
       }
-    }   
-    }
 
+          
+  
       return (
           <div className='container'>
           <div className='center'>  
-          <button onClick={() => this.componentDidMount(), this.updateTime() } className="btn btn-lg btn-info">Update</button>  
+          <button onClick={() => this.componentDidMount()} className="btn btn-lg btn-info">Update</button>  
             {this.state.description.map(note => 
                 <div>
                     <h1>{note.title}</h1>
                     <p>{note.content}</p>
                 </div>
             )}
-            <p>Time: { this.state.time } </p>
+  
+              <div><p>{ this.state.currentDateTime }</p></div>
             </div>
 
       </div>

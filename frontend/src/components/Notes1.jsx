@@ -35,7 +35,9 @@ export default class Notes1 extends React.Component {
   
       return (
           <div className='container'>
-          <div className='center'>  
+          <div className='center'> 
+          <br></br>
+          <text className="text-center text-xs text-uppercase text-light p-3 bg-dark">{ this.state.currentDateTime }</text><br></br><br></br>
           <button onClick={() => this.componentDidMount()} className="btn btn-lg btn-info">Update</button>  
             {this.state.description.map(note => 
                 <div>
@@ -43,8 +45,7 @@ export default class Notes1 extends React.Component {
                     <p>{note.content}</p>
                 </div>
             )}
-  
-              <div><p>{ this.state.currentDateTime }</p></div>
+ 
             </div>
 
       </div>

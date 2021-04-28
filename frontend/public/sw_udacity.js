@@ -2,17 +2,6 @@ const cacheName = 'v2';
 
 //Call Install Event
 this.addEventListener('install', (e) => {
-    e.waitUntil(
-        caches.open(cacheName).then((cache) => {
-            cache.addAll([
-                'beach1-large.jpg',
-                'beach2-large.jpg',
-                'beach3-large.jpg',
-                'Home.jsx', 
-            ])
-        })
-    )
-    //Perform some task
     console.log('Service Worker: installed');
 });
 
@@ -47,7 +36,7 @@ this.addEventListener('fetch', e => {
                 .open(cacheName)
                 .then(cache => {
                     //Add response to cache
-                    cache.put(e.request, resClone);
+                    cache.add(e.request, resClone);
                 });
                 return res;
         }).catch(err => caches.match(e.request).then(res => res))
@@ -55,35 +44,3 @@ this.addEventListener('fetch', e => {
 
 });
 
-/**
- * 
-let deferredPrompt;
-
-window.addEventListener('beforeinstallprompt', (e) => {
-    //Prevent Chrome 67 and earlier from automatically showing prompt
-    e.preventDefault();
-    //Stash the event so it can be triggered later.
-    deferredPrompt = e;
-
-});
-
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    //Update UI notify the user they can add to home screen
-    btnAdd.style.display = 'block';
-
-});
-
-btnAdd.addEventListener('click', (e) => {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-            console.log('User accepted the A2HS prompt');
-
-        }
-        deferredPrompt = null;
-    });
-});
-
- */

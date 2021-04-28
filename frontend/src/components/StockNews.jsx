@@ -14,6 +14,7 @@ export default class StockNews extends React.Component {
     const response = await fetch(url);
     const data = await response.json();
     this.setState({ description: data, loading: false });
+    localStorage.setItem("Stock",JSON.stringify(data))
   }
 
   render() {

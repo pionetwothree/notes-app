@@ -17,17 +17,29 @@ export default function ApolloNotes() {
     }
     }
 
-  //window.addEventListener('offline', function(e) { console.log('offline');});
+    const client = new ApolloClient({
+      uri: 'http://localhost:4000/graphql',
+      cache: new InMemoryCache({
+        typePolicies: {
+          Note: {
+            // Singleton types that have no identifying field can use an empty
+            // array for their keyFields.
+            keyFields: ["name"],
+          },
+      },
+      connectToDevTools: true
+    })});
 
-  //window.addEventListener('online', function(e) { console.log('online'); });
-
-
-
-  const client = new ApolloClient({
-    uri: 'http://localhost:4000/graphql',
-    cache: new InMemoryCache(),
-    connectToDevTools: true
-  });
+  
+  const READ_NOTES = gql`
+  query allnotes($first: Int! $name: String!) {
+    todo(name: $name) {
+      id
+      name
+      content
+    }
+  }
+`;
 
   const ADD_NOTE = gql`
   mutation addNote($name: String!, $content: String!) {addNote(name: $name, content: $content) {
@@ -36,12 +48,22 @@ export default function ApolloNotes() {
     content}}`;
 
 
+  const todo = client.readQuery({
+    query: READ_NOTES,
+    variables: { // Provide any required variables here
+      name: "Eintrag7",
+      first: 2,
+    },
+  });
+
+  //useQuery(gql`query {allnotes{name,content}} `);
   function NotesQuery() {
     const { loading, error, data } = useQuery(gql`query {allnotes{name,content}} `);
   
     if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error :(</p>; 
-  
+    if (error) return <p> {todo} </p>;
+     
+
     return data.allnotes.map(({ name, content }) => (
       <div key={name}>
         <p>
@@ -49,9 +71,10 @@ export default function ApolloNotes() {
         </p>
       </div>
     ));
-    }
+    
+  }
 
-    function AddNote() {
+  function AddNote() {
       let input1;
       let input2;
       const [addNote] = useMutation(ADD_NOTE, {
@@ -59,7 +82,7 @@ export default function ApolloNotes() {
           cache.modify({
             fields: {
               todos(existingNotes = []) {
-                const newNoteRef = cache.writeFragment({
+                const newNoteRef = cache.writeQuery({
                   data: addNote,
                   fragment: gql`
                     fragment NewNote on Note {
@@ -73,6 +96,28 @@ export default function ApolloNotes() {
               }
             }
            });
+        }
+      });
+      client.writeQuery({
+        query: gql`
+          query WriteTodo($name: String!) {
+            todo(name: $name) {
+              id
+              name
+              content
+            }
+          }`,
+        data: { // Contains the data to write
+          todo: {
+            __typename: 'Note',
+            id: false,
+            name: 'Eintrag7',
+            content: false
+          },
+        },
+        variables: {
+          name: "Eintrag7",
+          first: 2
         }
       }); 
 

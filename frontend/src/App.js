@@ -2,24 +2,14 @@ import React from 'react';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
-import Notes from './components/Notes';
+import Notes1 from './components/Notes1';
+import Notes2 from './components/Notes2';
 import CreateNote from './components/CreateNote';
 import ApolloNotes from './components/ApolloNotes';
 import Footer from './components/Footer';
 import StockNews from './components/StockNews';
-
+import VirtualDOM from './components/VirtualDOM';
 //import useOnlineStatus from '@rehooks/online-status';
-
-/** 
-function MyComponent() {
-  const onlineStatus = useOnlineStatus();
-  return (
-    <div>
-      <h1>You are {onlineStatus ? "Online" : "Offline"}</h1>
-    </div>
-  );
-}
-*/
 
 
 function App() {
@@ -29,25 +19,33 @@ return (
   <Router>
     <Navbar />
 
-    <Route path="/" exact>
+    <Route path="/home" exact>
       <Home />
     </Route>
 
-    <Route path="/notes">
-    <Notes />
+    <Route path="/notes1" exact>
+      <Notes1 />
+    </Route>
+
+    <Route path="/notes2">
+      <Notes2 />
     </Route>
 
     <Route path="/apollonotes">
       <ApolloNotes />
-      
     </Route>
 
     <Route path="/create">
-    <CreateNote />
+      <CreateNote />
+      
     </Route>
 
     <Route path="/stocknews">
-    <StockNews />
+      <StockNews />
+    </Route>
+
+    <Route path="/virtualdom">
+    <VirtualDOM />
     </Route>
 
     

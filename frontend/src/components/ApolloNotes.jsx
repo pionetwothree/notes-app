@@ -1,45 +1,48 @@
-//import React, { useState, useEffect } from 'react'
-//import {Table} from 'react-bootstrap'
-//import Realm from "realm"
-//import { NetworkStatus } from '@apollo/client';
 import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery, useMutation } from '@apollo/client';
-//import {createNetworkStatusNotifier} from 'react-apollo-network-status';
 
 export default function ApolloNotes() {
 
   function Online () {
     if (navigator.onLine) {
-      console.log('online');
+      //console.log('online');
       return <p style={{backgroundColor:'green', color: "white"}}>Online</p>;
     } else {
-      console.log('offline');
+      //console.log('offline');
       return <p style={{backgroundColor:'red', color: "white"}}>Offline</p>;
     }
     }
 
+ 
+    
     const client = new ApolloClient({
       uri: 'http://localhost:4000/graphql',
-      cache: new InMemoryCache({
-        typePolicies: {
+      cache: new InMemoryCache(),
+      typePolicies: {
           Note: {
             // Singleton types that have no identifying field can use an empty
             // array for their keyFields.
-            keyFields: ["name"],
+            keyFields: ["name", "content"]},
+          defaultOptions: {
+            watchQuery: {
+              fetchPolicy: 'cache-first',
+            },
           },
       },
       connectToDevTools: true
-    })});
+      
+    }); 
 
-  
+  /*
   const READ_NOTES = gql`
-  query allnotes($first: Int! $name: String!) {
-    todo(name: $name) {
+  query allnotes($name: String!, $content: String!) {
+    todo(name: $name, content: $content) {
       id
       name
       content
+      }
     }
-  }
-`;
+  `;
+  */
 
   const ADD_NOTE = gql`
   mutation addNote($name: String!, $content: String!) {addNote(name: $name, content: $content) {
@@ -47,21 +50,12 @@ export default function ApolloNotes() {
     name
     content}}`;
 
-
-  const todo = client.readQuery({
-    query: READ_NOTES,
-    variables: { // Provide any required variables here
-      name: "Eintrag7",
-      first: 2,
-    },
-  });
-
   //useQuery(gql`query {allnotes{name,content}} `);
   function NotesQuery() {
     const { loading, error, data } = useQuery(gql`query {allnotes{name,content}} `);
   
     if (loading) return <p>Loading...</p>;
-    if (error) return <p> {todo} </p>;
+    if (error) return <p> error </p>;
      
 
     return data.allnotes.map(({ name, content }) => (
@@ -71,8 +65,7 @@ export default function ApolloNotes() {
         </p>
       </div>
     ));
-    
-  }
+    };
 
   function AddNote() {
       let input1;
@@ -100,24 +93,25 @@ export default function ApolloNotes() {
       });
       client.writeQuery({
         query: gql`
-          query WriteTodo($name: String!) {
-            todo(name: $name) {
+          query allnotes($name: String!, $content: String!) {
+            Note(name: $name, content: $content) {
               id
               name
               content
             }
           }`,
         data: { // Contains the data to write
-          todo: {
+          Note: {
             __typename: 'Note',
-            id: false,
-            name: 'Eintrag7',
-            content: false
+            id: true,
+            name: true,
+            content: true,
           },
         },
         variables: {
-          name: "Eintrag7",
-          first: 2
+          id: true,
+          name: true,
+          content: true,
         }
       }); 
 
@@ -139,35 +133,66 @@ export default function ApolloNotes() {
         </div>
       );
     }
+    
 
-/**
- * <form
-            onSubmit={e => {
-              e.preventDefault();
-              addNote({ variables: { name: input.title } });
-              input.title = '';}}>
-            <input
-              ref={node => {input.title = node}}/>
-            
-            <button type="submit">Add Note</button>
-          </form>
- * 
- * 
- * 
- * <div className='form-group'>
-                <input onChange={handleChange} name="title" value={input.title} autoComplete="off" className='from-control' placeholder="note title"></input>
-            </div>
+  /** 
+    const { todo } = client.readQuery({
+      query: READ_NOTES,
+      variables: { // Provide any required variables here
+        name: "Eintrag",
+      }})
+*/
 
-            <div className='form-group'>
-                <textarea onChange={handleChange} name="content" value={input.content} autoComplete="off" className='from-control' placeholder="note content"></textarea>
-            </div>
- * 
- * 
- */
+const READ_NOTES_EINTRAG = gql`
+  query allnotes($name: String!, $content: String!) {
+    Note(name: $name, content: $content) {
+      name
+      content
+      }
+    }
+  `;
 
+/*
+const READ_NOTE = gql`
+query ReadTodo($name: String!) {
+  Note(name: $name) {
+    id
+    name
+    content
+  }
+}
+`;
 
-return (
-    <div className='container'>
+// Fetch the cached Note item with name "Eintrag"
+const { Note } = client.readQuery({
+query: READ_NOTE,
+variables: { // Provide any required variables here
+  name: "Eintrag",
+},
+});
+*/
+
+    function ReadCache() {
+        const { loading, error, data } = useQuery(READ_NOTES_EINTRAG, {
+        variables: { // Provide any required variables here
+          name: true,
+          content: true,
+    }});
+
+    if (loading) return 'Loading...';
+    if (error) return 'Failure:  ' + error;
+    if (data === null) return '0';
+    
+    return (
+      <div>
+      {JSON.stringify(data)}
+      </div>
+     
+    )
+    }
+  
+    return (
+      <div className='container'>
       <ApolloProvider client={client}>
           <div class='center'>
             <h1 class='center'>My first Apollo app 🚀</h1>
@@ -179,54 +204,17 @@ return (
             <br></br>
             <NotesQuery />
             <br></br>
+
+           <div>
+            <ReadCache></ReadCache>
           </div>
+        
+
+      </div>
       </ApolloProvider>
             
+    
     </div>
-    );
-  }
-
-
-//render(<News />, document.getElementById("root"));  
-
-
-        /** 
-        if (!navigator.serviceWorker){
-            return console.error("Service Worker not supported")
-        }
-    
-        navigator.serviceWorker.ready
-        .then(registration => registration.sync.register('syncAttendees'))
-        .then(() => console.log("Registered background sync"))
-        .catch(err => console.error("Error registering background sync", err))
-        */
-
-
-    /**     
-    fetch('http://localhost:4000/graphql', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: `
-        query {
-            notes{id,name}
-          }` 
-        }),
-    })
-    .then(res => res.json())
-    .then(res => console.log(res.data));
-
-    */
-
-/** {
-      mode ==='offline'?
-      <div class="alert alert-warning" role="alert">You are in offline mode or some issue with connection</div>
-      :null
+    )
     }
-*/
-    
-    
 
- /**   
-    <button onClick={registerBackgroundSync} className="btn btn-lg btn-info">Background Sync</button>
-
-  */
